@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class joueur : MonoBehaviour
 {
@@ -11,11 +12,18 @@ public class joueur : MonoBehaviour
     private bool m_flip_x = false;
     [SerializeField]
     private float m_vitesse_bullet = 2f;
+    private float m_cooldown_degat = 2f;
+    private float last_degat;
+    private Text m_text_point;
+    private int m_nb_point = 0;
+    private bool m_estMort = false;
 
     private const int ORIENTATION_BAS = 0;
     private const int ORIENTATION_HAUT = 1;
     private const int ORIENTATION_GAUCHE = 2;
     private const int ORIENTATION_DROITE = 3;
+    private GameObject m_barre_de_vie;
+
 
     public GameObject fusil_bas;
     public GameObject fusil_haut;
@@ -32,25 +40,40 @@ public class joueur : MonoBehaviour
         m_rb = GetComponent<Rigidbody2D>();
         m_anim = GetComponent<Animator>();
         m_sprite = GetComponent<SpriteRenderer>();
+        m_text_point = GameObject.Find("nb_points").GetComponent<Text>();
+        m_text_point.text = "Points : " + m_nb_point;
+        //m_barre_de_vie = GameObject.Find("barre_de_vie");
+        GameObject.Find("barre_de_vie").GetComponent<gestion_affichage_point_de_vie>().gererAffichagePointDeVie(point_de_vie);
 
         fusil_bas.SetActive(false);
         fusil_haut.SetActive(false);
         fusil_cote.SetActive(false);
+
+        last_degat = Time.time;
     }
 
     private void Update()
     {
-        float x = Input.GetAxis("Horizontal") * maxSpeed;
-        float y = Input.GetAxis("Vertical") * maxSpeed;
+        if (!m_estMort)
+        {
+            float x = Input.GetAxis("Horizontal") * maxSpeed;
+            float y = Input.GetAxis("Vertical") * maxSpeed;
 
-        m_rb.velocity = new Vector2(x, y);
+            m_rb.velocity = new Vector2(x, y);
 
-        float t_speed = Mathf.Abs(m_rb.velocity.x + m_rb.velocity.y);
-        m_anim.SetFloat("speed", t_speed);
+            float t_speed = Mathf.Abs(m_rb.velocity.x + m_rb.velocity.y);
+            m_anim.SetFloat("speed", t_speed);
 
-        m_sprite.flipX = m_flip_x;
+            m_sprite.flipX = m_flip_x;
 
-        if (Input.GetMouseButtonDown(0)) gererToucheAttaque();
+            if (Input.GetMouseButtonDown(0)) gererToucheAttaque();
+        }
+    }
+
+    public void ajouterPoint()
+    {
+        m_nb_point++;
+        m_text_point.text = "Points : " + m_nb_point;
     }
 
     private void gererToucheAttaque()
@@ -86,11 +109,26 @@ public class joueur : MonoBehaviour
 
     public void subirDegat()
     {
-        point_de_vie--;
-        if (point_de_vie <= 0)
+        if(m_cooldown_degat + last_degat < Time.time)
         {
-            Debug.Log("mort");
+            last_degat = Time.time;
+            point_de_vie--;
+            GameObject.Find("barre_de_vie").GetComponent<gestion_affichage_point_de_vie>().gererAffichagePointDeVie(point_de_vie);
+            if (point_de_vie <= 0)
+            {
+                //Debug.Log("mort");
+                m_estMort = true;
+                m_rb.velocity = new Vector2(0, 0);
+                m_anim.SetBool("estMort", true);
+                StartCoroutine(mort());
+            }
         }
+    }
+
+    IEnumerator mort()
+    {
+        yield return new WaitForSeconds(1.3f);
+        Time.timeScale = 0f;
     }
 
     IEnumerator resetAffichage()

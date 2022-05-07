@@ -32,6 +32,18 @@ public class Ennemi_IA : MonoBehaviour
         m_sprite = GetComponent<SpriteRenderer>();
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!m_estMort)
+        {
+            if (collision.gameObject.tag == ("Joueur"))
+            {
+                
+                collision.gameObject.GetComponent<joueur>().subirDegat();
+            }
+        }
+    }
+
     public void enleverPointDeVie()
     {
         point_de_vie--;
@@ -39,10 +51,12 @@ public class Ennemi_IA : MonoBehaviour
         {
             m_estMort = true;
             m_anim.SetBool("mort", true);
+            GameObject.Find("perso").GetComponent<joueur>().ajouterPoint();
             StartCoroutine(mort());
-            
         }
     }
+
+    
 
     IEnumerator mort()
     {
