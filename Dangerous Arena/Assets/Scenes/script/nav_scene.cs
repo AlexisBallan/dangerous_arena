@@ -10,6 +10,11 @@ public class nav_scene : MonoBehaviour
         SceneManager.LoadScene("game");
     }
 
+    public void bouton_score()
+    {
+        SceneManager.LoadScene("score");
+    }
+
     public void bouton_quitter()
     {
         Application.Quit();

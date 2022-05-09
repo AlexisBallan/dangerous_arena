@@ -36,7 +36,8 @@ public class Spawner : MonoBehaviour
         {
             last_level = Time.time;
             m_nombre_spawn++;
-            Debug.Log("NOUVELLE VAGUE !");
+            GameObject.Find("perso").GetComponent<joueur>().annocerNouvelleVague();
+            //Debug.Log("NOUVELLE VAGUE !");
         }
     }
 

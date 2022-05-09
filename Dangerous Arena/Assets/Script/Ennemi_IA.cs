@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Ennemi_IA : MonoBehaviour
 {
-   
+    public AudioClip son_mort;
     public float vitesse = 5f;
 
     private const int ORIENTATION_BAS = 0;
@@ -22,6 +22,7 @@ public class Ennemi_IA : MonoBehaviour
     private bool m_flip_x = false;
     private int point_de_vie = 2;
     private bool m_estMort = false;
+    private AudioSource m_audio;
 
 
     private void Start()
@@ -30,6 +31,7 @@ public class Ennemi_IA : MonoBehaviour
         m_rb = GetComponent<Rigidbody2D>();
         m_anim = GetComponent<Animator>();
         m_sprite = GetComponent<SpriteRenderer>();
+        m_audio = GetComponent<AudioSource>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -47,8 +49,9 @@ public class Ennemi_IA : MonoBehaviour
     public void enleverPointDeVie()
     {
         point_de_vie--;
-        if (point_de_vie == 0)
+        if (point_de_vie == 0 && !m_estMort)
         {
+            m_audio.PlayOneShot(son_mort);
             m_estMort = true;
             m_anim.SetBool("mort", true);
             GameObject.Find("perso").GetComponent<joueur>().ajouterPoint();
@@ -60,7 +63,7 @@ public class Ennemi_IA : MonoBehaviour
 
     IEnumerator mort()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.3f);
         Destroy(this.gameObject);
     }
 

@@ -23,6 +23,8 @@ public class joueur : MonoBehaviour
     private const int ORIENTATION_GAUCHE = 2;
     private const int ORIENTATION_DROITE = 3;
     private GameObject m_barre_de_vie;
+    private AudioSource m_AudioSource;
+    private int m_nouvelle_vague = 1;
 
 
     public GameObject fusil_bas;
@@ -30,6 +32,10 @@ public class joueur : MonoBehaviour
     public GameObject fusil_cote;
     public GameObject bullet_horizontal;
     public GameObject bullet_vertical;
+    public GameObject menu_mort;
+    public AudioClip tire;
+    public AudioClip take_damage;
+    public AudioClip death_sound;
 
     public float maxSpeed = 3f;
     public int point_de_vie = 5;
@@ -44,6 +50,7 @@ public class joueur : MonoBehaviour
         m_text_point.text = "Points : " + m_nb_point;
         //m_barre_de_vie = GameObject.Find("barre_de_vie");
         GameObject.Find("barre_de_vie").GetComponent<gestion_affichage_point_de_vie>().gererAffichagePointDeVie(point_de_vie);
+        m_AudioSource = GetComponent<AudioSource>();
 
         fusil_bas.SetActive(false);
         fusil_haut.SetActive(false);
@@ -81,7 +88,7 @@ public class joueur : MonoBehaviour
         //Debug.Log("attaque");
         switch (orientation_joueur)
         {
-            case ORIENTATION_BAS :
+            case ORIENTATION_BAS:
                 fusil_bas.SetActive(true);
                 GameObject bullet_bas = Instantiate(bullet_vertical, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), Quaternion.identity);
                 bullet_bas.GetComponent<Bullet>().addVelocity(new Vector3(0, -1 * m_vitesse_bullet, 0));
@@ -91,7 +98,7 @@ public class joueur : MonoBehaviour
                 GameObject bullet_haut = Instantiate(bullet_vertical, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Quaternion.identity);
                 bullet_haut.GetComponent<Bullet>().addVelocity(new Vector3(0, 1 * m_vitesse_bullet, 0));
                 break;
-            case ORIENTATION_DROITE :
+            case ORIENTATION_DROITE:
                 fusil_cote.transform.localScale = new Vector3(-1, 1, 1);
                 fusil_cote.SetActive(true);
                 GameObject bullet_droite = Instantiate(bullet_horizontal, new Vector3(transform.position.x + 1f, transform.position.y + 0.5f, transform.position.z), Quaternion.identity);
@@ -103,32 +110,65 @@ public class joueur : MonoBehaviour
                 bullet_gauche.GetComponent<Bullet>().addVelocity(new Vector3(-1 * m_vitesse_bullet, 0, 0));
                 break;
         }
+        m_AudioSource.PlayOneShot(tire);
 
         StartCoroutine(resetAffichage());
     }
 
+    public void annocerNouvelleVague()
+    {
+        m_nouvelle_vague++;
+        GameObject.Find("vague").GetComponent<Text>().text = "Vague : " + m_nouvelle_vague;
+    }
+
     public void subirDegat()
     {
-        if(m_cooldown_degat + last_degat < Time.time)
+        if (m_cooldown_degat + last_degat < Time.time)
         {
+
             last_degat = Time.time;
             point_de_vie--;
             GameObject.Find("barre_de_vie").GetComponent<gestion_affichage_point_de_vie>().gererAffichagePointDeVie(point_de_vie);
             if (point_de_vie <= 0)
             {
+                m_AudioSource.PlayOneShot(death_sound);
                 //Debug.Log("mort");
                 m_estMort = true;
                 m_rb.velocity = new Vector2(0, 0);
                 m_anim.SetBool("estMort", true);
                 StartCoroutine(mort());
-            }
+            } else m_AudioSource.PlayOneShot(take_damage);
         }
     }
 
     IEnumerator mort()
     {
         yield return new WaitForSeconds(1.3f);
+        menu_mort.SetActive(true);
+        GameObject.Find("nb_points_ecran_mort").GetComponent<Text>().text = "Points : " + m_nb_point;
         Time.timeScale = 0f;
+        sauvegarderLesDonnees();
+    }
+
+    private void sauvegarderLesDonnees()
+    {
+        
+        int t_scoreLePlusElever = PlayerPrefs.GetInt("score");
+
+        if (m_nb_point > t_scoreLePlusElever)
+        {
+            PlayerPrefs.SetInt("score", m_nb_point);
+        }
+
+        int t_vagueLaPlusElever = PlayerPrefs.GetInt("vague");
+
+        if (m_nouvelle_vague > t_vagueLaPlusElever)
+        {
+            PlayerPrefs.SetInt("vague", m_nouvelle_vague);
+        }
+        //PlayerPrefs.SetInt("vague", m_nouvelle_vague);
+        //PlayerPrefs.SetInt("score", m_nb_point);
+
     }
 
     IEnumerator resetAffichage()
