@@ -25,6 +25,9 @@ public class joueur : MonoBehaviour
     private GameObject m_barre_de_vie;
     private AudioSource m_AudioSource;
     private int m_nouvelle_vague = 1;
+    private int m_nombre_missile = 1;
+    private int m_multidirection = 1;
+    private bool m_mode_hardcore = false;
 
 
     public GameObject fusil_bas;
@@ -36,6 +39,8 @@ public class joueur : MonoBehaviour
     public AudioClip tire;
     public AudioClip take_damage;
     public AudioClip death_sound;
+    public AudioClip mode_hardcore;
+    public GameObject modeHardcoreCanvas;
 
     public float maxSpeed = 3f;
     public int point_de_vie = 5;
@@ -72,42 +77,143 @@ public class joueur : MonoBehaviour
             m_anim.SetFloat("speed", t_speed);
 
             m_sprite.flipX = m_flip_x;
-
-            if (Input.GetMouseButtonDown(0)) gererToucheAttaque();
+            if(Time.timeScale != 0f)
+                if (Input.GetMouseButtonDown(0)) gererToucheAttaque();
         }
     }
 
-    public void ajouterPoint()
+    public void ajouterPoint(int point)
     {
-        m_nb_point++;
+        m_nb_point += point;
         m_text_point.text = "Points : " + m_nb_point;
+        if(m_nb_point >= 1000 && !m_mode_hardcore)
+        {
+            m_mode_hardcore = true;
+            modeHardcoreCanvas.SetActive(true);
+            GameObject.Find("Spawner").GetComponent<Spawner>().m_mode_hardcore = true;
+            GameObject.Find("effet_sonore").GetComponent<AudioSource>().PlayOneShot(mode_hardcore);
+        }
     }
 
     private void gererToucheAttaque()
     {
         //Debug.Log("attaque");
-        switch (orientation_joueur)
+        for (int i = 1; i <= m_nombre_missile; i++){
+            switch (orientation_joueur)
+            {
+                case ORIENTATION_BAS:
+                    fusil_bas.SetActive(true);
+                    GameObject bullet_bas = Instantiate(bullet_vertical, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), Quaternion.identity);
+                    bullet_bas.GetComponent<Bullet>().addVelocity(new Vector3(0, -1 * m_vitesse_bullet, 0));
+                    
+                    break;
+                case ORIENTATION_HAUT:
+                    fusil_haut.SetActive(true);
+                    GameObject bullet_haut = Instantiate(bullet_vertical, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Quaternion.identity);
+                    bullet_haut.GetComponent<Bullet>().addVelocity(new Vector3(0, 1 * m_vitesse_bullet, 0));
+                    break;
+                case ORIENTATION_DROITE:
+                    fusil_cote.transform.localScale = new Vector3(-1, 1, 1);
+                    fusil_cote.SetActive(true);
+                    GameObject bullet_droite = Instantiate(bullet_horizontal, new Vector3(transform.position.x + 1f, transform.position.y + 0.5f, transform.position.z), Quaternion.identity);
+                    bullet_droite.GetComponent<Bullet>().addVelocity(new Vector3(1 * m_vitesse_bullet, 0, 0));
+                    break;
+                case ORIENTATION_GAUCHE:
+                    fusil_cote.SetActive(true);
+                    GameObject bullet_gauche = Instantiate(bullet_horizontal, new Vector3(transform.position.x - 1f, transform.position.y + 0.5f, transform.position.z), Quaternion.identity);
+                    bullet_gauche.GetComponent<Bullet>().addVelocity(new Vector3(-1 * m_vitesse_bullet, 0, 0));
+                    break;
+            }
+        }
+
+        switch (m_multidirection)
         {
-            case ORIENTATION_BAS:
-                fusil_bas.SetActive(true);
-                GameObject bullet_bas = Instantiate(bullet_vertical, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), Quaternion.identity);
-                bullet_bas.GetComponent<Bullet>().addVelocity(new Vector3(0, -1 * m_vitesse_bullet, 0));
+            case 2:
+                switch (orientation_joueur)
+                {
+                    case ORIENTATION_BAS:
+                        GameObject bullet_haut = Instantiate(bullet_vertical, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Quaternion.identity);
+                        bullet_haut.GetComponent<Bullet>().addVelocity(new Vector3(0, 1 * m_vitesse_bullet, 0));
+                        break;
+                    case ORIENTATION_HAUT:
+                        GameObject bullet_bas = Instantiate(bullet_vertical, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), Quaternion.identity);
+                        bullet_bas.GetComponent<Bullet>().addVelocity(new Vector3(0, -1 * m_vitesse_bullet, 0));
+                        break;
+                    case ORIENTATION_DROITE:
+                        GameObject bullet_gauche = Instantiate(bullet_horizontal, new Vector3(transform.position.x - 1f, transform.position.y + 0.5f, transform.position.z), Quaternion.identity);
+                        bullet_gauche.GetComponent<Bullet>().addVelocity(new Vector3(-1 * m_vitesse_bullet, 0, 0));
+                        break;
+                    case ORIENTATION_GAUCHE:
+                        GameObject bullet_droite = Instantiate(bullet_horizontal, new Vector3(transform.position.x + 1f, transform.position.y + 0.5f, transform.position.z), Quaternion.identity);
+                        bullet_droite.GetComponent<Bullet>().addVelocity(new Vector3(1 * m_vitesse_bullet, 0, 0));
+                        break;
+                }
                 break;
-            case ORIENTATION_HAUT:
-                fusil_haut.SetActive(true);
-                GameObject bullet_haut = Instantiate(bullet_vertical, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Quaternion.identity);
-                bullet_haut.GetComponent<Bullet>().addVelocity(new Vector3(0, 1 * m_vitesse_bullet, 0));
+            case 3:
+                switch (orientation_joueur)
+                {
+                    case ORIENTATION_BAS:
+                        GameObject bullet_haut = Instantiate(bullet_vertical, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Quaternion.identity);
+                        bullet_haut.GetComponent<Bullet>().addVelocity(new Vector3(0, 1 * m_vitesse_bullet, 0));
+                        GameObject bullet_haut_gauche = Instantiate(bullet_horizontal, new Vector3(transform.position.x - 1f, transform.position.y + 0.5f, transform.position.z), Quaternion.identity);
+                        bullet_haut_gauche.GetComponent<Bullet>().addVelocity(new Vector3(-1 * m_vitesse_bullet, 0, 0));
+                        break;
+                    case ORIENTATION_HAUT:
+                        GameObject bullet_bas = Instantiate(bullet_vertical, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), Quaternion.identity);
+                        bullet_bas.GetComponent<Bullet>().addVelocity(new Vector3(0, -1 * m_vitesse_bullet, 0));
+                        GameObject bullet_bas_droite = Instantiate(bullet_horizontal, new Vector3(transform.position.x + 1f, transform.position.y + 0.5f, transform.position.z), Quaternion.identity);
+                        bullet_bas_droite.GetComponent<Bullet>().addVelocity(new Vector3(1 * m_vitesse_bullet, 0, 0));
+                        break;
+                    case ORIENTATION_DROITE:
+                        GameObject bullet_gauche = Instantiate(bullet_horizontal, new Vector3(transform.position.x - 1f, transform.position.y + 0.5f, transform.position.z), Quaternion.identity);
+                        bullet_gauche.GetComponent<Bullet>().addVelocity(new Vector3(-1 * m_vitesse_bullet, 0, 0));
+                        GameObject bullet_gauche_haut = Instantiate(bullet_vertical, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Quaternion.identity);
+                        bullet_gauche_haut.GetComponent<Bullet>().addVelocity(new Vector3(0, 1 * m_vitesse_bullet, 0));
+                        break;
+                    case ORIENTATION_GAUCHE:
+                        GameObject bullet_droite = Instantiate(bullet_horizontal, new Vector3(transform.position.x + 1f, transform.position.y + 0.5f, transform.position.z), Quaternion.identity);
+                        bullet_droite.GetComponent<Bullet>().addVelocity(new Vector3(1 * m_vitesse_bullet, 0, 0));
+                        GameObject bullet_dorite_bas = Instantiate(bullet_vertical, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), Quaternion.identity);
+                        bullet_dorite_bas.GetComponent<Bullet>().addVelocity(new Vector3(0, -1 * m_vitesse_bullet, 0));
+                        break;
+                }
                 break;
-            case ORIENTATION_DROITE:
-                fusil_cote.transform.localScale = new Vector3(-1, 1, 1);
-                fusil_cote.SetActive(true);
-                GameObject bullet_droite = Instantiate(bullet_horizontal, new Vector3(transform.position.x + 1f, transform.position.y + 0.5f, transform.position.z), Quaternion.identity);
-                bullet_droite.GetComponent<Bullet>().addVelocity(new Vector3(1 * m_vitesse_bullet, 0, 0));
-                break;
-            case ORIENTATION_GAUCHE:
-                fusil_cote.SetActive(true);
-                GameObject bullet_gauche = Instantiate(bullet_horizontal, new Vector3(transform.position.x - 1f, transform.position.y + 0.5f, transform.position.z), Quaternion.identity);
-                bullet_gauche.GetComponent<Bullet>().addVelocity(new Vector3(-1 * m_vitesse_bullet, 0, 0));
+            case 4:
+                switch (orientation_joueur)
+                {
+                    case ORIENTATION_BAS:
+                        GameObject bullet_haut = Instantiate(bullet_vertical, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Quaternion.identity);
+                        bullet_haut.GetComponent<Bullet>().addVelocity(new Vector3(0, 1 * m_vitesse_bullet, 0));
+                        GameObject bullet_haut_gauche = Instantiate(bullet_horizontal, new Vector3(transform.position.x - 1f, transform.position.y + 0.5f, transform.position.z), Quaternion.identity);
+                        bullet_haut_gauche.GetComponent<Bullet>().addVelocity(new Vector3(-1 * m_vitesse_bullet, 0, 0));
+                        GameObject bullet_haut_droite = Instantiate(bullet_horizontal, new Vector3(transform.position.x + 1f, transform.position.y + 0.5f, transform.position.z), Quaternion.identity);
+                        bullet_haut_droite.GetComponent<Bullet>().addVelocity(new Vector3(1 * m_vitesse_bullet, 0, 0));
+                        break;
+                    case ORIENTATION_HAUT:
+                        GameObject bullet_bas = Instantiate(bullet_vertical, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), Quaternion.identity);
+                        bullet_bas.GetComponent<Bullet>().addVelocity(new Vector3(0, -1 * m_vitesse_bullet, 0));
+                        GameObject bullet_bas_droite = Instantiate(bullet_horizontal, new Vector3(transform.position.x + 1f, transform.position.y + 0.5f, transform.position.z), Quaternion.identity);
+                        bullet_bas_droite.GetComponent<Bullet>().addVelocity(new Vector3(1 * m_vitesse_bullet, 0, 0));
+                        GameObject bullet_bas_gauche = Instantiate(bullet_horizontal, new Vector3(transform.position.x - 1f, transform.position.y + 0.5f, transform.position.z), Quaternion.identity);
+                        bullet_bas_gauche.GetComponent<Bullet>().addVelocity(new Vector3(-1 * m_vitesse_bullet, 0, 0));
+                        break;
+                    case ORIENTATION_DROITE:
+                        GameObject bullet_gauche = Instantiate(bullet_horizontal, new Vector3(transform.position.x - 1f, transform.position.y + 0.5f, transform.position.z), Quaternion.identity);
+                        bullet_gauche.GetComponent<Bullet>().addVelocity(new Vector3(-1 * m_vitesse_bullet, 0, 0));
+                        GameObject bullet_gauche_haut = Instantiate(bullet_vertical, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Quaternion.identity);
+                        bullet_gauche_haut.GetComponent<Bullet>().addVelocity(new Vector3(0, 1 * m_vitesse_bullet, 0));
+                        GameObject bullet_droite_bas = Instantiate(bullet_vertical, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), Quaternion.identity);
+                        bullet_droite_bas.GetComponent<Bullet>().addVelocity(new Vector3(0, -1 * m_vitesse_bullet, 0));
+                        break;
+                    case ORIENTATION_GAUCHE:
+                        GameObject bullet_droite = Instantiate(bullet_horizontal, new Vector3(transform.position.x + 1f, transform.position.y + 0.5f, transform.position.z), Quaternion.identity);
+                        bullet_droite.GetComponent<Bullet>().addVelocity(new Vector3(1 * m_vitesse_bullet, 0, 0));
+                        GameObject bullet_dorite_bas = Instantiate(bullet_vertical, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), Quaternion.identity);
+                        bullet_dorite_bas.GetComponent<Bullet>().addVelocity(new Vector3(0, -1 * m_vitesse_bullet, 0));
+                        GameObject bullet_droite_haut = Instantiate(bullet_vertical, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Quaternion.identity);
+                        bullet_droite_haut.GetComponent<Bullet>().addVelocity(new Vector3(0, 1 * m_vitesse_bullet, 0));
+                        break;
+                }
                 break;
         }
         m_AudioSource.PlayOneShot(tire);
@@ -121,13 +227,13 @@ public class joueur : MonoBehaviour
         GameObject.Find("vague").GetComponent<Text>().text = "Vague : " + m_nouvelle_vague;
     }
 
-    public void subirDegat()
+    public void subirDegat(int nombre_degat)
     {
         if (m_cooldown_degat + last_degat < Time.time)
         {
 
             last_degat = Time.time;
-            point_de_vie--;
+            point_de_vie -= nombre_degat;
             GameObject.Find("barre_de_vie").GetComponent<gestion_affichage_point_de_vie>().gererAffichagePointDeVie(point_de_vie);
             if (point_de_vie <= 0)
             {
@@ -152,23 +258,15 @@ public class joueur : MonoBehaviour
 
     private void sauvegarderLesDonnees()
     {
-        
         int t_scoreLePlusElever = PlayerPrefs.GetInt("score");
 
         if (m_nb_point > t_scoreLePlusElever)
-        {
             PlayerPrefs.SetInt("score", m_nb_point);
-        }
 
         int t_vagueLaPlusElever = PlayerPrefs.GetInt("vague");
 
         if (m_nouvelle_vague > t_vagueLaPlusElever)
-        {
             PlayerPrefs.SetInt("vague", m_nouvelle_vague);
-        }
-        //PlayerPrefs.SetInt("vague", m_nouvelle_vague);
-        //PlayerPrefs.SetInt("score", m_nb_point);
-
     }
 
     IEnumerator resetAffichage()
@@ -184,6 +282,53 @@ public class joueur : MonoBehaviour
     {
         orientation_joueur = (float)trouver_position_joueur();
         m_anim.SetFloat("position", orientation_joueur);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+
+        switch (collision.gameObject.tag)
+        {
+            case "heal":
+                if (point_de_vie == 5)
+                    ajouterPoint(5);
+                else
+                {
+                    point_de_vie++;
+                    GameObject.Find("barre_de_vie").GetComponent<gestion_affichage_point_de_vie>().gererAffichagePointDeVie(point_de_vie);
+                }
+                Destroy(collision.gameObject);
+                break;
+            case "speed":
+                if (maxSpeed == 7)
+                    ajouterPoint(5);
+                else
+                    maxSpeed++;
+                GameObject.Find("barre_speed").GetComponent<affichage_bar_speed>().gererAffichage((int)maxSpeed - 4);
+                Destroy(collision.gameObject);
+                break;
+            case "missile":
+                if (m_nombre_missile == 4)
+                    ajouterPoint(5);
+                else
+                    m_nombre_missile++;
+                GameObject.Find("barre_missile").GetComponent<affichage_bar_missile>().gererAffichage(m_nombre_missile - 1);
+                Destroy(collision.gameObject);
+                break;
+            case "piece":
+                ajouterPoint(15);
+                Destroy(collision.gameObject);
+                break;
+            case "multidirectionnel":
+                if (m_multidirection == 4)
+                    ajouterPoint(5);
+                else
+                    m_multidirection++;
+                GameObject.Find("barre_multidirectionnel").GetComponent<affichage_bar_multidirectionnel>().gererAffichage(m_multidirection - 1);
+                Destroy(collision.gameObject);
+                break;
+        }
+        
     }
 
     private int trouver_position_joueur()

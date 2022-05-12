@@ -6,10 +6,14 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     public GameObject monstre;
+    public GameObject Sprinter;
+    public GameObject Mastodonte;
     public float interval_spawn = 1f;
     public float interval_next_level = 30f;
+    public bool m_mode_hardcore = false;
 
     private System.Random random = new System.Random();
+    private int nombre_vague = 1;
 
     private float last_time, last_level;
     [SerializeField]
@@ -35,7 +39,9 @@ public class Spawner : MonoBehaviour
         if (last_level + interval_next_level < Time.time)
         {
             last_level = Time.time;
-            m_nombre_spawn++;
+            if (m_nombre_spawn < 10)
+                m_nombre_spawn++;
+            nombre_vague++;
             GameObject.Find("perso").GetComponent<joueur>().annocerNouvelleVague();
             //Debug.Log("NOUVELLE VAGUE !");
         }
@@ -61,9 +67,40 @@ public class Spawner : MonoBehaviour
         return Vector3.zero;
     }
 
+    private int genererNombre(int min, int max)
+    {
+        return random.Next(min, max);
+    }
+    private GameObject genererMonstre()
+    {
+        int t_nombreSpawn = 1;
+        GameObject t_monstre = monstre;
+
+        if(nombre_vague > 4)
+        {
+            t_nombreSpawn = genererNombre(1, 6);
+            
+            if(t_nombreSpawn == 2)
+                t_monstre = Sprinter;
+            else if (t_nombreSpawn == 3)    
+                t_monstre = Mastodonte;
+                 
+        } else if (nombre_vague > 2)
+        {
+            t_nombreSpawn = genererNombre(1, 4);
+            if(t_nombreSpawn == 2)
+                t_monstre = Sprinter;
+        }
+
+        return t_monstre;
+    }
+
     private void GererSpawn(Vector3 position_spawn)
     {
         //Debug.Log("nouveau spawn" + position_spawn);
-        Instantiate(monstre, position_spawn, Quaternion.identity);
+        GameObject Orc = Instantiate(genererMonstre(), position_spawn, Quaternion.identity);
+        Orc.GetComponent<Ennemi_IA>().number_bonus = genererNombre(1, 51);
+        if(m_mode_hardcore)
+            Orc.GetComponent<Ennemi_IA>().modeHardcore();
     }
 }

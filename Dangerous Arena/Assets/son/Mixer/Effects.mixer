@@ -33,6 +33,20 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
+--- !u!244 &-4687704018872199604
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: 5a631ecdaf80b37408b391a254823e2c
+  m_EffectName: Attenuation
+  m_MixLevel: 8762c19fee0862a4da4827eca8704843
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!244 &-2912793168388004577
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -66,6 +80,25 @@ AudioMixerGroupController:
   m_Mute: 0
   m_Solo: 0
   m_BypassEffects: 0
+--- !u!243 &-2494925501158977939
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: musique
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: c5e72590072c20e438e393e64038ba7e
+  m_Children: []
+  m_Volume: 59e3bf24c222b62478667d741065155a
+  m_Pitch: ee832645429104c4bb1bc8fc9b9ba37d
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: -4687704018872199604}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
 --- !u!241 &24100000
 AudioMixerController:
   m_ObjectHideFlags: 0
@@ -89,6 +122,7 @@ AudioMixerController:
     - 5e303b4fcb803264ba16f5841f2b982d
     - 44a2f8cd7aeaf3e4b83a3e92dd664080
     - b193a083df3210744807f74b043627ca
+    - c5e72590072c20e438e393e64038ba7e
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -106,6 +140,7 @@ AudioMixerGroupController:
   - {fileID: 3775897453266489108}
   - {fileID: 4354684486832498527}
   - {fileID: -2825364830073695102}
+  - {fileID: -2494925501158977939}
   m_Volume: f9611426c2d4daf4ebf61f9de305bbc4
   m_Pitch: ada60a4fd54de9242915b6f93d328a78
   m_Send: 00000000000000000000000000000000
@@ -141,6 +176,7 @@ AudioMixerSnapshotController:
   m_FloatValues:
     1a5dcf00fae1fd6448efe1accff16438: -1.0800337
     34eaa0d31eb13fc4ba4221e2aa20fddd: -6.991066
+    f9611426c2d4daf4ebf61f9de305bbc4: -0.025776558
     457b9de62571a6a48ab271e4464f3bf2: -8.362404
     05d6daa9da87a554082420cda4caa21f: -6.133707
     01d2ac4b4b3fd6840951b4543f579a82: -14.816608

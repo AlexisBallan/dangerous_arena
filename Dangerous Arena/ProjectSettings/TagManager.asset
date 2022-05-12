@@ -7,6 +7,11 @@ TagManager:
   - Joueur
   - Ennemi
   - Bullet
+  - heal
+  - speed
+  - missile
+  - multidirectionnel
+  - piece
   layers:
   - Default
   - TransparentFX

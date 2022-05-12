@@ -6,6 +6,9 @@ ScriptsOnlyBuild:
     - Ennemi_IA
     - Pause
     - Spawner
+    - affichage_bar_missile
+    - affichage_bar_multidirectionnel
+    - affichage_bar_speed
     - gestion_affichage_point_de_vie
     - joueur
     - joueur_tuto
@@ -71,25 +74,25 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 608}
+      Script: {instanceID: 610}
     - Class: 114
-      Script: {instanceID: 11742}
+      Script: {instanceID: 11744}
     - Class: 114
-      Script: {instanceID: 12050}
+      Script: {instanceID: 12054}
     - Class: 114
-      Script: {instanceID: 12104}
+      Script: {instanceID: 12108}
     - Class: 114
-      Script: {instanceID: 12814}
+      Script: {instanceID: 12818}
     - Class: 114
-      Script: {instanceID: 13478}
+      Script: {instanceID: 13482}
     - Class: 114
-      Script: {instanceID: 13594}
+      Script: {instanceID: 13516}
     - Class: 114
-      Script: {instanceID: 14416}
+      Script: {instanceID: 13600}
     - Class: 114
-      Script: {instanceID: 15054}
+      Script: {instanceID: 14422}
     - Class: 114
-      Script: {instanceID: 63772}
+      Script: {instanceID: 15060}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -156,35 +159,41 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 608}
+      Script: {instanceID: 610}
     - Class: 114
-      Script: {instanceID: 11742}
+      Script: {instanceID: 11744}
     - Class: 114
-      Script: {instanceID: 12050}
+      Script: {instanceID: 12054}
     - Class: 114
-      Script: {instanceID: 12104}
+      Script: {instanceID: 12108}
     - Class: 114
-      Script: {instanceID: 12554}
+      Script: {instanceID: 12558}
     - Class: 114
-      Script: {instanceID: 12794}
+      Script: {instanceID: 12798}
     - Class: 114
-      Script: {instanceID: 12814}
+      Script: {instanceID: 12818}
     - Class: 114
-      Script: {instanceID: 12852}
+      Script: {instanceID: 12856}
     - Class: 114
-      Script: {instanceID: 13478}
+      Script: {instanceID: 13482}
     - Class: 114
-      Script: {instanceID: 13594}
+      Script: {instanceID: 13600}
     - Class: 114
-      Script: {instanceID: 13668}
+      Script: {instanceID: 13674}
     - Class: 114
-      Script: {instanceID: 14416}
+      Script: {instanceID: 14422}
     - Class: 114
-      Script: {instanceID: 14874}
+      Script: {instanceID: 14880}
     - Class: 114
-      Script: {instanceID: 14878}
+      Script: {instanceID: 14884}
     - Class: 114
-      Script: {instanceID: 15054}
+      Script: {instanceID: 15060}
+    - Class: 114
+      Script: {instanceID: 79480}
+    - Class: 114
+      Script: {instanceID: 79488}
+    - Class: 114
+      Script: {instanceID: 79494}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -239,25 +248,25 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 608}
+      Script: {instanceID: 610}
     - Class: 114
-      Script: {instanceID: 11742}
+      Script: {instanceID: 11744}
     - Class: 114
-      Script: {instanceID: 12050}
+      Script: {instanceID: 11882}
     - Class: 114
-      Script: {instanceID: 12104}
+      Script: {instanceID: 12054}
     - Class: 114
-      Script: {instanceID: 12814}
+      Script: {instanceID: 12108}
     - Class: 114
-      Script: {instanceID: 13478}
+      Script: {instanceID: 12818}
     - Class: 114
-      Script: {instanceID: 13594}
+      Script: {instanceID: 13482}
     - Class: 114
-      Script: {instanceID: 14416}
+      Script: {instanceID: 13600}
     - Class: 114
-      Script: {instanceID: 15054}
+      Script: {instanceID: 14422}
     - Class: 114
-      Script: {instanceID: 76636}
+      Script: {instanceID: 15060}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -312,27 +321,27 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 608}
+      Script: {instanceID: 610}
     - Class: 114
-      Script: {instanceID: 11742}
+      Script: {instanceID: 11744}
     - Class: 114
-      Script: {instanceID: 12050}
+      Script: {instanceID: 12054}
     - Class: 114
-      Script: {instanceID: 12104}
+      Script: {instanceID: 12108}
     - Class: 114
-      Script: {instanceID: 12814}
+      Script: {instanceID: 12818}
     - Class: 114
-      Script: {instanceID: 12852}
+      Script: {instanceID: 12856}
     - Class: 114
-      Script: {instanceID: 13478}
+      Script: {instanceID: 13482}
     - Class: 114
-      Script: {instanceID: 13594}
+      Script: {instanceID: 13600}
     - Class: 114
-      Script: {instanceID: 13750}
+      Script: {instanceID: 13756}
     - Class: 114
-      Script: {instanceID: 14416}
+      Script: {instanceID: 14422}
     - Class: 114
-      Script: {instanceID: 15054}
+      Script: {instanceID: 15060}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -382,6 +391,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_Dropdown
+  - hash:
+      serializedVersion: 2
+      Hash: 8089e7758f91b3eaf3c70d3cd15c1e1d
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: score
   - hash:
       serializedVersion: 2
       Hash: e7a73f5f78ba6445195ec23b74a1ce2d
@@ -540,7 +555,7 @@ ScriptsOnlyBuild:
     className: AnimationPlayableAsset
   - hash:
       serializedVersion: 2
-      Hash: 7a74a87dc8a98f1abe323e9e27c5ee1f
+      Hash: 08cb6487e07f320ffcc4d8769ee0b708
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: joueur
@@ -558,7 +573,7 @@ ScriptsOnlyBuild:
     className: Shadow
   - hash:
       serializedVersion: 2
-      Hash: 51a271757604bf99b8d8f703790ead1c
+      Hash: e445da6e5b98dc64a3e548c9f9238e07
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Ennemi_IA
@@ -646,6 +661,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: nav_scene
+  - hash:
+      serializedVersion: 2
+      Hash: 4ac7064472140c8d50c68dec8c8eb415
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: DontDestroyOnSelectedScenes
   - hash:
       serializedVersion: 2
       Hash: 4fd8bf02e3089425d3502e26c44ba31a
@@ -792,7 +813,7 @@ ScriptsOnlyBuild:
     className: TextMeshPro
   - hash:
       serializedVersion: 2
-      Hash: 107b49a50b0cd712bed8c5323e80f106
+      Hash: e0e6ba78ea1f6bc1ba5d88675e3f6202
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Spawner
@@ -894,16 +915,22 @@ ScriptsOnlyBuild:
     className: PlayableTrack
   - hash:
       serializedVersion: 2
-      Hash: 4ac7064472140c8d50c68dec8c8eb415
+      Hash: ad75770ef13dd84e31dd4f2a13b2c2db
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: DontDestroyOnSelectedScenes
+    className: affichage_bar_missile
   - hash:
       serializedVersion: 2
-      Hash: 8089e7758f91b3eaf3c70d3cd15c1e1d
+      Hash: 01435f4e4201bcdc1596d7c79db9f0d3
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: score
+    className: affichage_bar_speed
+  - hash:
+      serializedVersion: 2
+      Hash: 2a3bb51e6f4e5558aada79da689552ea
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: affichage_bar_multidirectionnel
   platform: 5
   scenePathNames:
   - Assets/Scenes/ecran_principal.unity

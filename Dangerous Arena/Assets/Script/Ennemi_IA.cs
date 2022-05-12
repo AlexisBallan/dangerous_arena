@@ -6,6 +6,14 @@ public class Ennemi_IA : MonoBehaviour
 {
     public AudioClip son_mort;
     public float vitesse = 5f;
+    public GameObject heart;
+    public GameObject mutlidirectionnel;
+    public GameObject speed;
+    public GameObject coin;
+    public GameObject bullets;
+    public int number_bonus;
+    public int nombre_degats = 1;
+    public int nombre_point = 1;
 
     private const int ORIENTATION_BAS = 0;
     private const int ORIENTATION_HAUT = 1;
@@ -20,6 +28,7 @@ public class Ennemi_IA : MonoBehaviour
     private SpriteRenderer m_sprite;
     private float orientation_joueur;
     private bool m_flip_x = false;
+    [SerializeField]
     private int point_de_vie = 2;
     private bool m_estMort = false;
     private AudioSource m_audio;
@@ -40,8 +49,7 @@ public class Ennemi_IA : MonoBehaviour
         {
             if (collision.gameObject.tag == ("Joueur"))
             {
-                
-                collision.gameObject.GetComponent<joueur>().subirDegat();
+                collision.gameObject.GetComponent<joueur>().subirDegat(nombre_degats);
             }
         }
     }
@@ -49,21 +57,51 @@ public class Ennemi_IA : MonoBehaviour
     public void enleverPointDeVie()
     {
         point_de_vie--;
-        if (point_de_vie == 0 && !m_estMort)
+        if (point_de_vie <= 0 && !m_estMort)
         {
             m_audio.PlayOneShot(son_mort);
             m_estMort = true;
             m_anim.SetBool("mort", true);
-            GameObject.Find("perso").GetComponent<joueur>().ajouterPoint();
+            GameObject.Find("perso").GetComponent<joueur>().ajouterPoint(nombre_point);
             StartCoroutine(mort());
         }
     }
 
-    
+    private void genererBonus()
+    {
+        switch (number_bonus)
+        {
+            case 1:
+                Instantiate(heart, transform.position, Quaternion.identity);
+                break;
+            case 2:
+                Instantiate(bullets, transform.position, Quaternion.identity);
+                break;
+            case 3:
+                Instantiate(coin, transform.position, Quaternion.identity);
+                break;
+            case 4:
+                Instantiate(mutlidirectionnel, transform.position, Quaternion.identity);
+                break;
+            case 5:
+                Instantiate(speed, transform.position, Quaternion.identity);
+                break;
+        }
+    }
+
+    public void modeHardcore()
+    {
+        vitesse++;
+        point_de_vie++;
+        nombre_degats++;
+        nombre_point = nombre_point * 2;
+    }
 
     IEnumerator mort()
     {
+        GetComponent<CircleCollider2D>().isTrigger = true;
         yield return new WaitForSeconds(1.3f);
+        genererBonus();
         Destroy(this.gameObject);
     }
 

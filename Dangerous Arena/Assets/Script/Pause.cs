@@ -38,8 +38,6 @@ public class Pause : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
-        {
             Pause_Click();
-        }
     }
 }
