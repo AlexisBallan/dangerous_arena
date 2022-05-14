@@ -12,6 +12,8 @@ public class Spawner : MonoBehaviour
     public float interval_next_level = 30f;
     public bool m_mode_hardcore = false;
     public bool m_mode_divin = false;
+    public int MIN_LUCK = 1;
+    public int MAX_LUCK = 56;
 
     private System.Random random = new System.Random();
     private int nombre_vague = 1;
@@ -106,7 +108,6 @@ public class Spawner : MonoBehaviour
             if(t_nombreSpawn == 2)
                 t_monstre = Sprinter;
         }
-
         return t_monstre;
     }
 
@@ -114,7 +115,7 @@ public class Spawner : MonoBehaviour
     {
         //Debug.Log("nouveau spawn" + position_spawn);
         GameObject Orc = Instantiate(genererMonstre(), position_spawn, Quaternion.identity);
-        Orc.GetComponent<Ennemi_IA>().number_bonus = genererNombre(1, 56);
+        Orc.GetComponent<Ennemi_IA>().number_bonus = genererNombre(MIN_LUCK, MAX_LUCK);
         if(m_mode_hardcore)
             Orc.GetComponent<Ennemi_IA>().modeHardcore();
         if (m_mode_divin)

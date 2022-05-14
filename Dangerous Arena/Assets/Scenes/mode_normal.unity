@@ -328,6 +328,8 @@ MonoBehaviour:
   interval_next_level: 30
   m_mode_hardcore: 0
   m_mode_divin: 0
+  MIN_LUCK: 0
+  MAX_LUCK: 56
   m_nombre_spawn: 2
 --- !u!1 &1447896010 stripped
 GameObject:
@@ -749,46 +751,6 @@ PrefabInstance:
     - target: {fileID: 3396374633876072878, guid: 492334b62299cd14dab7926fabc80e7b, type: 3}
       propertyPath: m_Name
       value: Desert_Palette
-      objectReference: {fileID: 0}
-    - target: {fileID: 6731363856611352704, guid: 492334b62299cd14dab7926fabc80e7b, type: 3}
-      propertyPath: m_Tiles.Array.data[546].second.m_TileIndex
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 6731363856611352704, guid: 492334b62299cd14dab7926fabc80e7b, type: 3}
-      propertyPath: m_Tiles.Array.data[546].second.m_TileSpriteIndex
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 6731363856611352704, guid: 492334b62299cd14dab7926fabc80e7b, type: 3}
-      propertyPath: m_TileAssetArray.Array.data[14].m_RefCount
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6731363856611352704, guid: 492334b62299cd14dab7926fabc80e7b, type: 3}
-      propertyPath: m_TileAssetArray.Array.data[52].m_RefCount
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6731363856611352704, guid: 492334b62299cd14dab7926fabc80e7b, type: 3}
-      propertyPath: m_TileSpriteArray.Array.data[14].m_RefCount
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6731363856611352704, guid: 492334b62299cd14dab7926fabc80e7b, type: 3}
-      propertyPath: m_TileSpriteArray.Array.data[52].m_RefCount
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6731363856611352704, guid: 492334b62299cd14dab7926fabc80e7b, type: 3}
-      propertyPath: m_Tiles.Array.data[594].second.m_TileIndex
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 6731363856611352704, guid: 492334b62299cd14dab7926fabc80e7b, type: 3}
-      propertyPath: m_Tiles.Array.data[594].second.m_TileSpriteIndex
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 6731363856611352704, guid: 492334b62299cd14dab7926fabc80e7b, type: 3}
-      propertyPath: m_TileAssetArray.Array.data[44].m_RefCount
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6731363856611352704, guid: 492334b62299cd14dab7926fabc80e7b, type: 3}
-      propertyPath: m_TileSpriteArray.Array.data[44].m_RefCount
-      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 492334b62299cd14dab7926fabc80e7b, type: 3}
@@ -1457,6 +1419,14 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1765744574}
+    - target: {fileID: 9115038936945622485, guid: 5a986e59b6348c34eb958d5bb6d8c76c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 121.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 9115038936945622485, guid: 5a986e59b6348c34eb958d5bb6d8c76c, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 556.7066
+      objectReference: {fileID: 0}
     - target: {fileID: 9115038937654235761, guid: 5a986e59b6348c34eb958d5bb6d8c76c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1548,14 +1518,6 @@ PrefabInstance:
     - target: {fileID: 9115038937654235774, guid: 5a986e59b6348c34eb958d5bb6d8c76c, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9115038938528794876, guid: 5a986e59b6348c34eb958d5bb6d8c76c, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 33.24
-      objectReference: {fileID: 0}
-    - target: {fileID: 9115038938528794876, guid: 5a986e59b6348c34eb958d5bb6d8c76c, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 264.29782
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a986e59b6348c34eb958d5bb6d8c76c, type: 3}

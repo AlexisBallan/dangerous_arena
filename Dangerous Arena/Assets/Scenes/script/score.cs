@@ -22,8 +22,8 @@ public class score : MonoBehaviour
         meileur_score.text = "Meilleur score : " + PlayerPrefs.GetInt("score");
         mode_normal.text = "Mode normal : " + PlayerPrefs.GetInt("mode_normal");
         mode_hardcore.text = "Mode hardcore : " + PlayerPrefs.GetInt("mode_hardcore");
-        mode_sans_bonus.text = "Mode sans bonus : ";
-        total_item.text = "Total bonus : " + (PlayerPrefs.GetInt("missile") + PlayerPrefs.GetInt("vitesse") + PlayerPrefs.GetInt("ricochet"));
+        mode_sans_bonus.text = "Mode sans bonus : " + PlayerPrefs.GetInt("mode_sans_bonus");
+        total_item.text = "Total bonus : " + (PlayerPrefs.GetInt("missile") + PlayerPrefs.GetInt("vitesse") + PlayerPrefs.GetInt("ricochet") + PlayerPrefs.GetInt("gachette"));
         total_missile.text = "Total missile : " + PlayerPrefs.GetInt("missile");
         total_vitesse.text = "Total vitesse : " + PlayerPrefs.GetInt("vitesse");
         total_ricochet.text = "Total ricochet : " + PlayerPrefs.GetInt("ricochet");

@@ -23,11 +23,19 @@ public class nav_scene : MonoBehaviour
     public void mode_infini()
     {
         SceneManager.LoadScene("mode_normal");
+        PlayerPrefs.SetInt("mode", 0);
     }
 
-    public void mode_hardcore()
+    public void mode_sans_bonus()
     {
-        SceneManager.LoadScene("mode_hardcore");
+        SceneManager.LoadScene("mode_normal");
+        PlayerPrefs.SetInt("mode", 2);
+    }
+
+    public void mode_hard()
+    {
+        SceneManager.LoadScene("mode_normal");
+        PlayerPrefs.SetInt("mode", 1);
     }
 
     public void mode_de_jeu()

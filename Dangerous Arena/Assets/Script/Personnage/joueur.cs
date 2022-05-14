@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class joueur : MonoBehaviour
 {
     private const int ORIENTATION_BAS = 0;
@@ -32,6 +33,9 @@ public class joueur : MonoBehaviour
     private int bonus_speed, bonus_ricochet, bonus_missile, bonus_gachette = 0;
     private bool souris_enfoncer = false;
     private float dernier_tire;
+    private bool mode_sans_bonus, mode_normal, mode_hard = false;
+    private int pointToHard, pointToDivin = 100;
+
 
     public GameObject fusil_bas;
     public GameObject fusil_haut;
@@ -66,8 +70,48 @@ public class joueur : MonoBehaviour
         fusil_bas.SetActive(false);
         fusil_haut.SetActive(false);
         fusil_cote.SetActive(false);
-
+            
         last_degat = dernier_tire = Time.time;
+
+        switch (PlayerPrefs.GetInt("mode"))
+        {
+            case 0:
+                modeNormal();
+                break;
+            case 1:
+                modeHard();
+                break;
+            case 2:
+                modeSansBonus();
+                break;
+        }
+    }
+
+    private void modeNormal()
+    {
+        mode_normal = true;
+        pointToHard = 1000;
+        pointToDivin = 2000;
+        GameObject.Find("Spawner").GetComponent<Spawner>().MAX_LUCK = 76;
+        Debug.Log("mode normal");
+    }
+
+    private void modeHard()
+    {
+        mode_hard = true;
+        pointToHard = 1;
+        pointToDivin = 1000;
+        GameObject.Find("Spawner").GetComponent<Spawner>().MAX_LUCK = 101;
+        Debug.Log("mode hard");
+    }
+
+    private void modeSansBonus()
+    {
+        mode_sans_bonus = true;
+        pointToHard = 1000;
+        pointToDivin = 2000;
+        GameObject.Find("Spawner").GetComponent<Spawner>().MIN_LUCK = 10;
+        Debug.Log("mode sans bonus");
     }
 
     private void Update()
@@ -84,8 +128,10 @@ public class joueur : MonoBehaviour
                 y = 1 * maxSpeed;
             if (Input.GetKey(PlayerPrefs.GetString("bas")))
                 y = -1 * maxSpeed;
-            //float x = Input.GetAxis("Horizontal") * maxSpeed;    
-            //float y = Input.GetAxis("Vertical") * maxSpeed;
+            //x = Input.GetAxis("Horizontal") * maxSpeed;    
+            //y = Input.GetAxis("Vertical") * maxSpeed;
+
+            
 
             m_rb.velocity = new Vector2(x, y);
 
@@ -112,7 +158,7 @@ public class joueur : MonoBehaviour
     {
         m_nb_point += point;
         m_text_point.text = "Points : " + m_nb_point;
-        if(m_nb_point >= 1000 && !m_mode_hardcore)
+        if(m_nb_point >= pointToHard && !m_mode_hardcore)
         {
             m_mode_hardcore = true;
             mutliplicateur_point++;
@@ -123,7 +169,7 @@ public class joueur : MonoBehaviour
             GameObject.Find("son").GetComponent<AudioSource>().clip = mode_hardcore_music;
             GameObject.Find("son").GetComponent<AudioSource>().Play();
         }
-        if (m_nb_point >= 2000 && !m_mode_divin)
+        if (m_nb_point >= pointToDivin && !m_mode_divin)
         {
             m_mode_divin = true;
             mutliplicateur_point = mutliplicateur_point * 3;
@@ -298,11 +344,32 @@ public class joueur : MonoBehaviour
 
     private void sauvegarderLesDonnees()
     {
-        int t_scoreModeNormalPlusElever = PlayerPrefs.GetInt("mode_normal");
+        if (mode_normal)
+        {
+            int t_scoreModeNormalPlusElever = PlayerPrefs.GetInt("mode_normal");
 
-        if (m_nb_point > t_scoreModeNormalPlusElever)
-            PlayerPrefs.SetInt("mode_normal", m_nb_point);
-        GameObject.Find("meilleur score").GetComponent<Text>().text = "Meilleur score en mode normal : " + PlayerPrefs.GetInt("mode_normal");
+            if (m_nb_point > t_scoreModeNormalPlusElever)
+                PlayerPrefs.SetInt("mode_normal", m_nb_point);
+            GameObject.Find("meilleur score").GetComponent<Text>().text = "Meilleur score en mode normal : " + PlayerPrefs.GetInt("mode_normal");
+        }
+
+        if (mode_sans_bonus)
+        {
+            int t_scoreModeNormalPlusElever = PlayerPrefs.GetInt("mode_sans_bonus");
+
+            if (m_nb_point > t_scoreModeNormalPlusElever)
+                PlayerPrefs.SetInt("mode_sans_bonus", m_nb_point);
+            GameObject.Find("meilleur score").GetComponent<Text>().text = "Meilleur score en mode sans bonus : " + PlayerPrefs.GetInt("mode_sans_bonus");
+        }
+
+        if (mode_hard)
+        {
+            int t_scoreModeNormalPlusElever = PlayerPrefs.GetInt("mode_hardcore");
+
+            if (m_nb_point > t_scoreModeNormalPlusElever)
+                PlayerPrefs.SetInt("mode_hardcore", m_nb_point);
+            GameObject.Find("meilleur score").GetComponent<Text>().text = "Meilleur score en mode hardcore : " + PlayerPrefs.GetInt("mode_hardcore");
+        }
 
         int t_scoreLePlusElever = PlayerPrefs.GetInt("score");
 
@@ -351,13 +418,13 @@ public class joueur : MonoBehaviour
                 Destroy(collision.gameObject);
                 break;
             case "speed":
-                if (maxSpeed == 7)
+                if (bonus_speed >= 3)
                     ajouterPoint(5 * mutliplicateur_point);
                 else
-                    maxSpeed++;
-                GameObject.Find("barre_speed").GetComponent<affichage_bar_speed>().gererAffichage((int)maxSpeed - 4);
-                Destroy(collision.gameObject);
+                    maxSpeed += .5f;
                 bonus_speed++;
+                GameObject.Find("barre_speed").GetComponent<affichage_bar_speed>().gererAffichage(bonus_speed);
+                Destroy(collision.gameObject);
                 break;
             case "missile":
                 if (m_nombre_missile == 4)
