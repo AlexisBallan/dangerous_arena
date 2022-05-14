@@ -5,9 +5,34 @@ using UnityEngine.SceneManagement;
 
 public class nav_scene : MonoBehaviour
 {
+    private void Awake()
+    {
+
+        if (PlayerPrefs.GetInt("lancement") == 0)
+        {
+            PlayerPrefs.SetString("haut", "w");
+            PlayerPrefs.SetString("bas", "s");
+            PlayerPrefs.SetString("droite", "d");
+            PlayerPrefs.SetString("gauche", "a");
+            PlayerPrefs.SetInt("lancement", 1);
+            PlayerPrefs.SetFloat("volume", 0);
+            Debug.Log("premier lancement");
+        }
+    }
+
     public void mode_infini()
     {
-        SceneManager.LoadScene("game");
+        SceneManager.LoadScene("mode_normal");
+    }
+
+    public void mode_hardcore()
+    {
+        SceneManager.LoadScene("mode_hardcore");
+    }
+
+    public void mode_de_jeu()
+    {
+        SceneManager.LoadScene("choix_mode_jeu");
     }
 
     public void bouton_score()

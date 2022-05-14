@@ -11,6 +11,7 @@ public class Spawner : MonoBehaviour
     public float interval_spawn = 1f;
     public float interval_next_level = 30f;
     public bool m_mode_hardcore = false;
+    public bool m_mode_divin = false;
 
     private System.Random random = new System.Random();
     private int nombre_vague = 1;
@@ -22,6 +23,20 @@ public class Spawner : MonoBehaviour
     private void Start()
     {
         last_level = last_time = Time.time;
+    }
+
+    public void modeHardcore()
+    {
+        m_mode_hardcore = true;
+        interval_spawn = 2f;
+    }
+
+    public void modeDivin()
+    {
+        m_mode_divin = true;
+        interval_spawn = 1f;
+        m_nombre_spawn = 1;
+        interval_next_level = 5f;
     }
 
     private void FixedUpdate()
@@ -99,8 +114,10 @@ public class Spawner : MonoBehaviour
     {
         //Debug.Log("nouveau spawn" + position_spawn);
         GameObject Orc = Instantiate(genererMonstre(), position_spawn, Quaternion.identity);
-        Orc.GetComponent<Ennemi_IA>().number_bonus = genererNombre(1, 51);
+        Orc.GetComponent<Ennemi_IA>().number_bonus = genererNombre(1, 56);
         if(m_mode_hardcore)
             Orc.GetComponent<Ennemi_IA>().modeHardcore();
+        if (m_mode_divin)
+            Orc.GetComponent<Ennemi_IA>().modeDivin();
     }
 }

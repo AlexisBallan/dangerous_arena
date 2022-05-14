@@ -11,6 +11,7 @@ public class Ennemi_IA : MonoBehaviour
     public GameObject speed;
     public GameObject coin;
     public GameObject bullets;
+    public GameObject gachette;
     public int number_bonus;
     public int nombre_degats = 1;
     public int nombre_point = 1;
@@ -47,7 +48,7 @@ public class Ennemi_IA : MonoBehaviour
     {
         if (!m_estMort)
         {
-            if (collision.gameObject.tag == ("Joueur"))
+            if (collision.gameObject.tag == "Joueur")
             {
                 collision.gameObject.GetComponent<joueur>().subirDegat(nombre_degats);
             }
@@ -86,6 +87,9 @@ public class Ennemi_IA : MonoBehaviour
             case 5:
                 Instantiate(speed, transform.position, Quaternion.identity);
                 break;
+            case 6:
+                Instantiate(gachette, transform.position, Quaternion.identity);
+                break;
         }
     }
 
@@ -95,6 +99,13 @@ public class Ennemi_IA : MonoBehaviour
         point_de_vie++;
         nombre_degats++;
         nombre_point = nombre_point * 2;
+    }
+
+    public void modeDivin()
+    {
+        point_de_vie = point_de_vie * 2;
+        nombre_degats = nombre_degats * 2;
+        nombre_point = nombre_point * 3;
     }
 
     IEnumerator mort()

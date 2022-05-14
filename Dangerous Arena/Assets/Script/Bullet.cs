@@ -29,7 +29,8 @@ public class Bullet : MonoBehaviour
             //Debug.Log("toucher quelquechose !");
             if(collision.gameObject.tag == "Ennemi")
             {
-                collision.gameObject.GetComponent<Ennemi_IA>().enleverPointDeVie();
+                collision.gameObject.GetComponent<Ennemi_IA>()?.enleverPointDeVie();
+                collision.gameObject.GetComponent<Ennemi_IA_hardcore>()?.enleverPointDeVie();
             }
             Destroy(this.gameObject);
         }

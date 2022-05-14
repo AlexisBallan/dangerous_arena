@@ -32,7 +32,13 @@ public class Pause : MonoBehaviour
     public void reload()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("game");
+        SceneManager.LoadScene("mode_normal");
+    }
+
+    public void reload_hard()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("mode_hardcore");
     }
 
     private void Update()

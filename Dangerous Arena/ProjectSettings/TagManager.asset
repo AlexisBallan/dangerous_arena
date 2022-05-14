@@ -12,6 +12,8 @@ TagManager:
   - missile
   - multidirectionnel
   - piece
+  - gachette
+  - mur
   layers:
   - Default
   - TransparentFX

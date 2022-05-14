@@ -106,6 +106,7 @@ MonoBehaviour:
   speed: {fileID: 5701782321269658742, guid: 2ec817c81215ff44cabc1622fd1851fb, type: 3}
   coin: {fileID: 6685158991731960242, guid: fe95d4e8eef1ff647a410d5381fb870a, type: 3}
   bullets: {fileID: 4299307753898370651, guid: bad6686e7baa360488d1907668bad26c, type: 3}
+  gachette: {fileID: 8261551371904204325, guid: 452ac10a388caf547879b830fd678973, type: 3}
   number_bonus: 0
   nombre_degats: 2
   nombre_point: 2

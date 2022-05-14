@@ -5,6 +5,11 @@ using UnityEngine.UI;
 
 public class joueur : MonoBehaviour
 {
+    private const int ORIENTATION_BAS = 0;
+    private const int ORIENTATION_HAUT = 1;
+    private const int ORIENTATION_GAUCHE = 2;
+    private const int ORIENTATION_DROITE = 3;
+
     private Rigidbody2D m_rb;
     private Animator m_anim;
     private SpriteRenderer m_sprite;
@@ -12,23 +17,21 @@ public class joueur : MonoBehaviour
     private bool m_flip_x = false;
     [SerializeField]
     private float m_vitesse_bullet = 2f;
-    private float m_cooldown_degat = 2f;
+    private float m_cooldown_degat = 1.5f;
     private float last_degat;
     private Text m_text_point;
     private int m_nb_point = 0;
     private bool m_estMort = false;
-
-    private const int ORIENTATION_BAS = 0;
-    private const int ORIENTATION_HAUT = 1;
-    private const int ORIENTATION_GAUCHE = 2;
-    private const int ORIENTATION_DROITE = 3;
-    private GameObject m_barre_de_vie;
     private AudioSource m_AudioSource;
     private int m_nouvelle_vague = 1;
     private int m_nombre_missile = 1;
     private int m_multidirection = 1;
     private bool m_mode_hardcore = false;
-
+    private bool m_mode_divin = false;
+    private int mutliplicateur_point = 1;
+    private int bonus_speed, bonus_ricochet, bonus_missile, bonus_gachette = 0;
+    private bool souris_enfoncer = false;
+    private float dernier_tire;
 
     public GameObject fusil_bas;
     public GameObject fusil_haut;
@@ -41,10 +44,13 @@ public class joueur : MonoBehaviour
     public AudioClip death_sound;
     public AudioClip mode_hardcore;
     public GameObject modeHardcoreCanvas;
+    public GameObject modeDivinCanvas;
+    public AudioClip mode_divin;
+    public AudioClip mode_hardcore_music;
 
     public float maxSpeed = 3f;
     public int point_de_vie = 5;
-
+    public float tire_enfoncer_temps = .1f;
 
     private void Awake()
     {
@@ -61,24 +67,44 @@ public class joueur : MonoBehaviour
         fusil_haut.SetActive(false);
         fusil_cote.SetActive(false);
 
-        last_degat = Time.time;
+        last_degat = dernier_tire = Time.time;
     }
 
     private void Update()
     {
         if (!m_estMort)
         {
-            float x = Input.GetAxis("Horizontal") * maxSpeed;
-            float y = Input.GetAxis("Vertical") * maxSpeed;
+            float x = 0;
+            float y = 0;
+            if (Input.GetKey(PlayerPrefs.GetString("droite")))
+                x = 1 * maxSpeed;
+            if(Input.GetKey(PlayerPrefs.GetString("gauche")))
+                x = -1 * maxSpeed;
+            if (Input.GetKey(PlayerPrefs.GetString("haut")))
+                y = 1 * maxSpeed;
+            if (Input.GetKey(PlayerPrefs.GetString("bas")))
+                y = -1 * maxSpeed;
+            //float x = Input.GetAxis("Horizontal") * maxSpeed;    
+            //float y = Input.GetAxis("Vertical") * maxSpeed;
 
             m_rb.velocity = new Vector2(x, y);
 
-            float t_speed = Mathf.Abs(m_rb.velocity.x + m_rb.velocity.y);
-            m_anim.SetFloat("speed", t_speed);
+            if (x != 0 || y != 0)
+                m_anim.SetFloat("speed", 1);
+            else
+                m_anim.SetFloat("speed", 0);
 
             m_sprite.flipX = m_flip_x;
-            if(Time.timeScale != 0f)
-                if (Input.GetMouseButtonDown(0)) gererToucheAttaque();
+            if (Time.timeScale != 0f)
+                if (Input.GetMouseButtonDown(0)) souris_enfoncer = true;
+            if (Input.GetMouseButtonUp(0) || Time.timeScale == 0f)
+                souris_enfoncer = false;
+
+            if (souris_enfoncer && dernier_tire + tire_enfoncer_temps < Time.time)
+            {
+                dernier_tire = Time.time;
+                gererToucheAttaque();
+            }
         }
     }
 
@@ -89,9 +115,24 @@ public class joueur : MonoBehaviour
         if(m_nb_point >= 1000 && !m_mode_hardcore)
         {
             m_mode_hardcore = true;
+            mutliplicateur_point++;
             modeHardcoreCanvas.SetActive(true);
-            GameObject.Find("Spawner").GetComponent<Spawner>().m_mode_hardcore = true;
+            GameObject.Find("Spawner").GetComponent<Spawner>().modeHardcore();
             GameObject.Find("effet_sonore").GetComponent<AudioSource>().PlayOneShot(mode_hardcore);
+            GameObject.Find("son").GetComponent<AudioSource>().Stop();
+            GameObject.Find("son").GetComponent<AudioSource>().clip = mode_hardcore_music;
+            GameObject.Find("son").GetComponent<AudioSource>().Play();
+        }
+        if (m_nb_point >= 2000 && !m_mode_divin)
+        {
+            m_mode_divin = true;
+            mutliplicateur_point = mutliplicateur_point * 3;
+            modeHardcoreCanvas.SetActive(false);
+            modeDivinCanvas.SetActive(true);
+            GameObject.Find("Spawner").GetComponent<Spawner>().modeDivin();
+            GameObject.Find("son").GetComponent<AudioSource>().Stop();
+            GameObject.Find("son").GetComponent<AudioSource>().clip = mode_divin;
+            GameObject.Find("son").GetComponent<AudioSource>().Play();
         }
     }
 
@@ -231,7 +272,6 @@ public class joueur : MonoBehaviour
     {
         if (m_cooldown_degat + last_degat < Time.time)
         {
-
             last_degat = Time.time;
             point_de_vie -= nombre_degat;
             GameObject.Find("barre_de_vie").GetComponent<gestion_affichage_point_de_vie>().gererAffichagePointDeVie(point_de_vie);
@@ -258,6 +298,12 @@ public class joueur : MonoBehaviour
 
     private void sauvegarderLesDonnees()
     {
+        int t_scoreModeNormalPlusElever = PlayerPrefs.GetInt("mode_normal");
+
+        if (m_nb_point > t_scoreModeNormalPlusElever)
+            PlayerPrefs.SetInt("mode_normal", m_nb_point);
+        GameObject.Find("meilleur score").GetComponent<Text>().text = "Meilleur score en mode normal : " + PlayerPrefs.GetInt("mode_normal");
+
         int t_scoreLePlusElever = PlayerPrefs.GetInt("score");
 
         if (m_nb_point > t_scoreLePlusElever)
@@ -267,11 +313,16 @@ public class joueur : MonoBehaviour
 
         if (m_nouvelle_vague > t_vagueLaPlusElever)
             PlayerPrefs.SetInt("vague", m_nouvelle_vague);
+
+        PlayerPrefs.SetInt("ricochet", bonus_ricochet + PlayerPrefs.GetInt("ricochet"));
+        PlayerPrefs.SetInt("vitesse", bonus_speed + PlayerPrefs.GetInt("vitesse"));
+        PlayerPrefs.SetInt("missile", bonus_missile + PlayerPrefs.GetInt("missile"));
+        PlayerPrefs.SetInt("gachette", bonus_gachette + PlayerPrefs.GetInt("gachette"));
     }
 
     IEnumerator resetAffichage()
     {
-        yield return new WaitForSeconds(.2f);
+        yield return new WaitForSeconds(.15f);
         fusil_bas.SetActive(false);
         fusil_haut.SetActive(false);
         fusil_cote.transform.localScale = new Vector3(1, 1, 1);
@@ -291,7 +342,7 @@ public class joueur : MonoBehaviour
         {
             case "heal":
                 if (point_de_vie == 5)
-                    ajouterPoint(5);
+                    ajouterPoint(5 * mutliplicateur_point);
                 else
                 {
                     point_de_vie++;
@@ -301,34 +352,45 @@ public class joueur : MonoBehaviour
                 break;
             case "speed":
                 if (maxSpeed == 7)
-                    ajouterPoint(5);
+                    ajouterPoint(5 * mutliplicateur_point);
                 else
                     maxSpeed++;
                 GameObject.Find("barre_speed").GetComponent<affichage_bar_speed>().gererAffichage((int)maxSpeed - 4);
                 Destroy(collision.gameObject);
+                bonus_speed++;
                 break;
             case "missile":
                 if (m_nombre_missile == 4)
-                    ajouterPoint(5);
+                    ajouterPoint(5 * mutliplicateur_point);
                 else
                     m_nombre_missile++;
                 GameObject.Find("barre_missile").GetComponent<affichage_bar_missile>().gererAffichage(m_nombre_missile - 1);
                 Destroy(collision.gameObject);
+                bonus_missile++;
                 break;
             case "piece":
-                ajouterPoint(15);
+                ajouterPoint(15 * mutliplicateur_point);
                 Destroy(collision.gameObject);
                 break;
             case "multidirectionnel":
                 if (m_multidirection == 4)
-                    ajouterPoint(5);
+                    ajouterPoint(5 * mutliplicateur_point);
                 else
                     m_multidirection++;
                 GameObject.Find("barre_multidirectionnel").GetComponent<affichage_bar_multidirectionnel>().gererAffichage(m_multidirection - 1);
                 Destroy(collision.gameObject);
+                bonus_ricochet++;
+                break;
+            case "gachette":
+                if (tire_enfoncer_temps <= 0.11f)
+                    ajouterPoint(5 * mutliplicateur_point);  
+                else
+                    tire_enfoncer_temps -= 0.02f;
+                bonus_gachette++;
+                GameObject.Find("barre_gachette").GetComponent<affichage_bar_gachette>().gererAffichage(bonus_gachette);
+                Destroy(collision.gameObject);
                 break;
         }
-        
     }
 
     private int trouver_position_joueur()
