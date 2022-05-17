@@ -6,11 +6,14 @@ public class Bullet : MonoBehaviour
 {
     private Rigidbody2D m_rb;
     private Vector3 vitesse;
+    private float debut_vie;
+    private float durer_vie = 10;
 
 
     private void Awake()
     {
         m_rb = GetComponent<Rigidbody2D>();
+        debut_vie = Time.time;
     }
     public void addVelocity(Vector3 velocity)
     {
@@ -20,6 +23,8 @@ public class Bullet : MonoBehaviour
     private void FixedUpdate()
     {
         m_rb.velocity = vitesse;
+        if (debut_vie + durer_vie < Time.time)
+            Destroy(this.gameObject);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -30,7 +35,6 @@ public class Bullet : MonoBehaviour
             if(collision.gameObject.tag == "Ennemi")
             {
                 collision.gameObject.GetComponent<Ennemi_IA>()?.enleverPointDeVie();
-                collision.gameObject.GetComponent<Ennemi_IA_hardcore>()?.enleverPointDeVie();
             }
             Destroy(this.gameObject);
         }

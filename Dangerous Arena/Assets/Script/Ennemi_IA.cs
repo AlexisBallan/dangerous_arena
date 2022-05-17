@@ -34,14 +34,13 @@ public class Ennemi_IA : MonoBehaviour
     private bool m_estMort = false;
     private AudioSource m_audio;
 
-
-    private void Start()
+    private void Awake()
     {
+        m_audio = GetComponent<AudioSource>();
         player = GameObject.Find("perso").GetComponent<Transform>();
         m_rb = GetComponent<Rigidbody2D>();
         m_anim = GetComponent<Animator>();
         m_sprite = GetComponent<SpriteRenderer>();
-        m_audio = GetComponent<AudioSource>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -50,7 +49,8 @@ public class Ennemi_IA : MonoBehaviour
         {
             if (collision.gameObject.tag == "Joueur")
             {
-                collision.gameObject.GetComponent<joueur>().subirDegat(nombre_degats);
+                collision.gameObject.GetComponent<joueur>()?.subirDegat(nombre_degats);
+                GameObject.Find("perso").GetComponent<joueur_histoire>()?.subirDegat(nombre_degats);
             }
         }
     }
@@ -63,7 +63,8 @@ public class Ennemi_IA : MonoBehaviour
             m_audio.PlayOneShot(son_mort);
             m_estMort = true;
             m_anim.SetBool("mort", true);
-            GameObject.Find("perso").GetComponent<joueur>().ajouterPoint(nombre_point);
+            GameObject.Find("perso").GetComponent<joueur>()?.ajouterPoint(nombre_point);
+            GameObject.Find("perso").GetComponent<joueur_histoire>()?.ajouterPoint(nombre_point);
             StartCoroutine(mort());
         }
     }
